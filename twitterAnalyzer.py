@@ -22,7 +22,34 @@ class tweetAnalyze:
         pass
 
     def initVector(self, fileName):
-        aLine = ""
+        aPlace = 0
+        
+        userName = ""
+        hourPosted = 0
+        numFollowers = 0
+        numRetweet = 0
+        
+        
+        with open(fileName) as aFile:
+            for aLine in aFile:
+                aPlace = aLine.find('[')
+                userName = aLine[:(aPlace-1)]
+                print "This is the username found: " + userName
+                aPlace +=1
+                aPlace +=12
+                hourPosted = aLine[aPlace:(aPlace + 2)]
+                print "This is the hour posted: " + hourPosted
+                aPlace = len(aLine)
+                aPlace = aPlace - 1
+                while True:
+                    if aLine[aPlace] == ' ':
+                        break
+                    else:
+                        aPlace = aPlace - 1
+                        
+                
+                
+        aLine = aFile.readline()
 
 
 def main():
