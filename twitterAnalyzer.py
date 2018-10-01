@@ -57,7 +57,6 @@ class tweetAnalyze:
                         
                 aPlace += 1
                 endPlace = aLine.find('\n')
-                #endPlace = endPlace - 1
                 numRetweet = int(aLine[aPlace:endPlace])
                 print "This is the number of retweets: " + str(numRetweet)
                 tempPlace = aPlace - 1
@@ -178,6 +177,8 @@ def main():
                 anObject.getBigPoster(aNumber)
                 anObject.getBigFollower(aNumber)
                 anObject.getBigRetweet(aNumber)
+                
+                print "DONE! Check your files."
             else:
                 print "It has to be bigger than 0."
                 return -1                
