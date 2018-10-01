@@ -1,12 +1,12 @@
 #import json
 import os
-improt FileNotFoundError
+import time
 
 class tweetObject:
-	 userName = ""
-     hourPosted = 0
-     numFollowers = 0
-     numRetweet = 0
+    userName = ""
+    hourPosted = 0
+    numFollowers = 0
+    numRetweet = 0
      
     def __init__(self, uName, hPost, numFol, numRet):
         self.userName = uName
@@ -47,9 +47,25 @@ class tweetAnalyze:
                     else:
                         aPlace = aPlace - 1
                         
-                
-                
-        aLine = aFile.readline()
+                aPlace += 1
+                endPlace = aLine.find('\n')
+                #endPlace = endPlace - 1
+                numRetweet = aLine[aPlace:endPlace]
+                print "This is the number of retweets: " + numRetweet
+                tempPlace = aPlace - 1
+                aPlace = aPlace - 2
+                while True:
+                    if aLine[aPlace] == ' ':
+                        break
+                    else:
+                        aPlace = aPlace - 1
+                        
+                aPlace += 1
+                numFollowers = aLine[aPlace:tempPlace]
+                print "This is the number of followers: " + numFollowers
+                break
+        
+        time.sleep(5)
 
 
 def main():
