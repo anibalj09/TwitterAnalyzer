@@ -7,16 +7,22 @@ class tweetObject:
     hourPosted = 0
     numFollowers = 0
     numRetweet = 0
+    theTweet = ""
      
-    def __init__(self, uName, hPost, numFol, numRet):
+    def __init__(self, uName, hPost, aTweet, numFol, numRet):
         self.userName = uName
         self.hourPosted = hPost
+        self.theTweet = aTweet
         self.numFollowers = numFol
         self.numRetweet = numRet 
 
 class tweetAnalyze:
     
     usersVector = []
+    uniqueUsers = []
+    userTotalCount = []
+    userFollowerCount = []
+    userMaxRetweetCount = []
     
     def __init__(self):
         pass
@@ -26,10 +32,12 @@ class tweetAnalyze:
         
         userName = ""
         hourPosted = 0
+        tweetItself = ""
         numFollowers = 0
         numRetweet = 0
         aPlace = 0
         endPlace = 0
+        tweetPlace = 0
         
         with open(fileName) as aFile:
             for aLine in aFile:
@@ -40,6 +48,7 @@ class tweetAnalyze:
                 aPlace +=12
                 hourPosted = aLine[aPlace:(aPlace + 2)]
                 print "This is the hour posted: " + hourPosted
+                                
                 aPlace = len(aLine)
                 aPlace = aPlace - 1
                 while True:
@@ -55,35 +64,44 @@ class tweetAnalyze:
                 print "This is the number of retweets: " + numRetweet
                 tempPlace = aPlace - 1
                 aPlace = aPlace - 2
+                
+                tweetPlace = aLine.find(']')
+                tweetPlace += 3
+                
                 while True:
                     if aLine[aPlace] == ' ':
                         break
                     else:
                         aPlace = aPlace - 1
+                endPlace = aPlace - 1
+                
+                tweetItself = aLine[tweetPlace:endPlace]
+                #print "This is the tweet: " + tweetItself
                         
                 aPlace += 1
                 numFollowers = aLine[aPlace:tempPlace]
                 print "This is the number of followers: " + numFollowers
-                aTweetObject = tweetObject(userName, hourPosted, numFollowers, numRetweet)
+                aTweetObject = tweetObject(userName, hourPosted, tweetItself, numFollowers, numRetweet)
+                break
                 self.usersVector.append(aTweetObject)
     
     def getBigPoster(self, numToFind):
-        uniqueUsers = []
-        userCount = []
+        self.uniqueUsers = []
+        self.userTotalCount = []
         sortedListU = []
         sortedListC = []
         
         for index, item in enumerate(self.usersVector):
             print "This is the current user name to check: " + item.userName
-            numTimes = uniqueUsers.count(item.userName)
+            numTimes = self.uniqueUsers.count(item.userName)
             if  numTimes == 0:
                 print "Inserting new user: " + item.userName
-                uniqueUsers.append(item.userName)
-                userCount.append(1)
+                self.uniqueUsers.append(item.userName)
+                self.userTotalCount.append(1)
             elif numTimes > 0:
-                itemIndex = uniqueUsers.index(item.userName)
+                itemIndex = self.uniqueUsers.index(item.userName)
                 print "Already in array."
-                userCount[itemIndex] += 1
+                self.userTotalCount[itemIndex] += 1
                 
         #for index, item in enumerate(userCount):
             #if index == 0:
@@ -92,19 +110,23 @@ class tweetAnalyze:
             #elif 
         
         #Sorting algorithm taken from: https://stackoverflow.com/a/20257603
-        for i in range(len(userCount)):
-            for j in range(len(userCount) - 1):
-                if userCount[j] > userCount[j+1]:
-                    userCount[j], userCount[j + 1] = userCount[j + 1], userCount[j]
-                    uniqueUsers[j], uniqueUsers[j + 1] = uniqueUsers[j + 1], uniqueUsers[j]
+        for i in range(len(self.userTotalCount)):
+            for j in range(len(self.userTotalCount) - 1):
+                if self.userTotalCount[j] > self.userTotalCount[j+1]:
+                    self.userTotalCount[j], self.userTotalCount[j + 1] = self.userTotalCount[j + 1], self.userTotalCount[j]
+                    self.uniqueUsers[j], self.uniqueUsers[j + 1] = self.uniqueUsers[j + 1], self.uniqueUsers[j]
         
         aFile = open("BigPosters.txt", 'w')
-        for index, item in enumerate(uniqueUsers):
-            aLine = str(index+1) + ". " + str(item) + " #" + str(userCount[index]) + '\n'
+        for index, item in enumerate(self.uniqueUsers):
+            aLine = str(index+1) + ". " + str(item) + " #" + str(self.userTotalCount[index]) + '\n'
             aFile.write(aLine)
             if (index + 1) == numToFind:
                 break
         aFile.close()
+        
+    def getBigFollower(self, numToFind):
+        for item in self.usersVector:
+            pass
 
 def main():
     
@@ -129,7 +151,8 @@ def main():
             if aNumToFind > 0:
                 anObject = tweetAnalyze()
                 anObject.initVector(aFileName)
-                anObject.getBigPoster(aNumber)
+                #anObject.getBigPoster(aNumber)
+                #anObject.getBigFollower(aNumber)
             else:
                 print "It has to be bigger than 0."
                 return -1                
